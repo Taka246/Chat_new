@@ -39,7 +39,7 @@ class LoginScreen extends React.Component {
           secureTextEntry
         />
         <TouchableHighlight style={styles.button} onPress={this.Submit.bind(this)} underlayColor="lightblue">
-          <Text style={styles.bottomTitle}>ログイン</Text>
+          <Text style={styles.buttonTitle}>ログイン</Text>
         </TouchableHighlight>
       </View>
     );
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
   },
-  bottomTitle: {
+  buttonTitle: {
     color: '#fff',
     fontSize: 18,
   },

@@ -3,6 +3,10 @@ import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
 class InterfaceScreen extends React.Component {
+  UserAdmin() {
+    this.props.navigation.navigate('Admin');
+  }
+
   Logout() {
     const resetAction = NavigationActions.reset({
       index: 0,
@@ -18,13 +22,13 @@ class InterfaceScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.buttonBar}>
           <TouchableHighlight style={styles.button} underlayColor="lightblue">
-            <Text style={styles.bottomTitle}>チャットルーム</Text>
+            <Text style={styles.buttonTitle}>チャットルーム</Text>
           </TouchableHighlight>
-          <TouchableHighlight style={styles.button} underlayColor="lightblue">
-            <Text style={styles.bottomTitle}>ユーザー管理</Text>
+          <TouchableHighlight style={styles.button} onPress={this.UserAdmin.bind(this)} underlayColor="lightblue">
+            <Text style={styles.buttonTitle}>ユーザー管理</Text>
           </TouchableHighlight>
           <TouchableHighlight style={styles.button} onPress={this.Logout.bind(this)} underlayColor="lightblue">
-            <Text style={styles.bottomTitle}>ログアウト</Text>
+            <Text style={styles.buttonTitle}>ログアウト</Text>
           </TouchableHighlight>
         </View>
       </View>
@@ -54,7 +58,7 @@ const styles = StyleSheet.create({
     width: '33.3%',
     alignItems: 'center',
   },
-  bottomTitle: {
+  buttonTitle: {
     color: '#fff',
     fontSize: 14,
   },
