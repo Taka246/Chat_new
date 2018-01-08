@@ -12,7 +12,7 @@ class LoginScreen extends React.Component {
     const resetAction = NavigationActions.reset({
       index: 0,
       actions: [
-        NavigationActions.navigate({ routeName: 'Interface' }),
+        NavigationActions.navigate({ routeName: 'ChatRoom' }),
       ],
     });
     this.props.navigation.dispatch(resetAction);
@@ -38,7 +38,7 @@ class LoginScreen extends React.Component {
           placeholder="パスワード"
           secureTextEntry
         />
-        <TouchableHighlight style={styles.button} onPress={this.Submit.bind(this)} underlayColor="lightblue">
+        <TouchableHighlight style={styles.button} onPress={this.Submit.bind(this)} underlayColor="skyblue">
           <Text style={styles.buttonTitle}>ログイン</Text>
         </TouchableHighlight>
       </View>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   button: {
-    backgroundColor: 'lightblue',
+    backgroundColor: 'skyblue',
     height: 48,
     marginTop: 84,
     borderRadius: 4,

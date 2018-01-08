@@ -3,6 +3,10 @@ import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
 class InterfaceScreen extends React.Component {
+  ChatRoom() {
+    this.props.navigation.navigate('ChatRoom');
+  }
+
   UserAdmin() {
     this.props.navigation.navigate('Admin');
   }
@@ -21,13 +25,13 @@ class InterfaceScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.buttonBar}>
-          <TouchableHighlight style={styles.button} underlayColor="lightblue">
+          <TouchableHighlight style={styles.button} onPress={this.ChatRoom.bind(this)} underlayColor="skyblue">
             <Text style={styles.buttonTitle}>チャットルーム</Text>
           </TouchableHighlight>
-          <TouchableHighlight style={styles.button} onPress={this.UserAdmin.bind(this)} underlayColor="lightblue">
+          <TouchableHighlight style={styles.button} onPress={this.UserAdmin.bind(this)} underlayColor="skyblue">
             <Text style={styles.buttonTitle}>ユーザー管理</Text>
           </TouchableHighlight>
-          <TouchableHighlight style={styles.button} onPress={this.Logout.bind(this)} underlayColor="lightblue">
+          <TouchableHighlight style={styles.button} onPress={this.Logout.bind(this)} underlayColor="skyblue">
             <Text style={styles.buttonTitle}>ログアウト</Text>
           </TouchableHighlight>
         </View>
@@ -44,7 +48,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   buttonBar: {
-    backgroundColor: 'lightblue',
+    backgroundColor: 'skyblue',
     paddingBottom: 24,
     height: 72,
     width: '100%',
