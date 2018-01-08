@@ -47,17 +47,19 @@ class AdminScreen extends React.Component {
 
             <View style={styles.User}>
               <View style={styles.picture}>
-                <Text style={styles.picture}>picture</Text>
+                <Text style={styles.pictureText}>pic</Text>
               </View>
               <View style={styles.name}>
-                <Text style={styles.name}>userName</Text>
+                <Text style={styles.nameText}>Taro</Text>
               </View>
               <View style={styles.date}>
-                <Text style={styles.date}>date</Text>
+                <Text style={styles.dateText}>2018/01/01</Text>
               </View>
-              <TouchableHighlight style={styles.deleteButton} underlayColor="skyblue">
-                <Text style={styles.deleteButtonTitle}>削除</Text>
-              </TouchableHighlight>
+              <View style={styles.delete}>
+                <TouchableHighlight style={styles.deleteButton} underlayColor="skyblue">
+                  <Text style={styles.deleteButtonTitle}>削除</Text>
+                </TouchableHighlight>
+              </View>
             </View>
           </View>
         </View>
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
   },
   users: {
     height: 216,
-    marginTop: 24,
+    marginTop: 36,
     width: '100%',
   },
   usersTitle: {
@@ -110,14 +112,14 @@ const styles = StyleSheet.create({
   },
   User: {
     height: 72,
-    marginTop: 24,
+    marginTop: 6,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
   },
   picture: {
-    height: '100%',
-    width: '25%',
+    height: '80%',
+    width: '20%',
     backgroundColor: 'skyblue',
     alignItems: 'center',
     justifyContent: 'center',
@@ -125,26 +127,31 @@ const styles = StyleSheet.create({
   name: {
     height: '100%',
     width: '25%',
-    backgroundColor: 'skyblue',
     alignItems: 'center',
     justifyContent: 'center',
   },
   date: {
     height: '100%',
+    width: '35%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  delete: {
+    height: '100%',
     width: '25%',
-    backgroundColor: 'blue',
     alignItems: 'center',
     justifyContent: 'center',
   },
   deleteButton: {
     height: '50%',
-    width: '25%',
+    width: '80%',
     backgroundColor: 'skyblue',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 4,
     borderWidth: 1,
     borderColor: '#000',
+    marginLeft: 8,
   },
 });
 

@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   picture: {
-    height: '85%',
+    height: '74.375%',
     width: '25%',
     backgroundColor: 'skyblue',
   },
