@@ -1,13 +1,24 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableHighlight, AsyncStorage } from 'react-native';
 
 import BottomBar from '../components/Interface';
+
 
 class AdminScreen extends React.Component {
   state = {
     email: '',
     password: '',
     url: '',
+  }
+
+
+  Registar() {
+    const userInfomation = [this.state.email, this.state.password, this.state.url];
+    AsyncStorage.setItem('userInfomation', JSON.stringify(userInfomation))
+      .then(() => {
+        console.log(userInfomation);
+        this.props.navigation.navigate('Admin');
+      });
   }
 
   render() {
@@ -39,7 +50,7 @@ class AdminScreen extends React.Component {
             autoCorrect={false}
             placeholder="表示画像URL ( 8 ~ 250文字 )"
           />
-          <TouchableHighlight style={styles.button} underlayColor="skyblue">
+          <TouchableHighlight style={styles.button} onPress={this.Registar.bind(this)} underlayColor="skyblue">
             <Text style={styles.buttonTitle}>登録</Text>
           </TouchableHighlight>
           <View style={styles.users}>
