@@ -3,54 +3,75 @@ import { StyleSheet, View, Text, TextInput, TouchableHighlight, AsyncStorage } f
 import { NavigationActions } from 'react-navigation';
 import Storage from 'react-native-storage';
 
+const storage = new Storage({
+  size: 1000,
+  storageBackend: AsyncStorage,
+  defaultExpires: null,
+  enableCache: true,
+  sync : {
+  },
+});
+
 class LoginScreen extends React.Component {
   state = {
     name: '',
     password: '',
-    idError:'',
-    passwordError:'',
+    idError: '',
+    passwordError: '',
+    users: [],
+  }
+  componentWillMount() {
+    const users = [];
+    for (let i = 0; i < 4; i += 1) {
+      storage.getAllDataForKey((i + 10).toString())
+        .then((user) => {
+          users.push({ key: i + 0, data: user[0] });
+        });
+    }
+    this.setState({ users });
   }
 
   Submit() {
-    const storage = new Storage({
-      size: 1000,
-      storageBackend: AsyncStorage,
-      defaultExpires: null,
-      enableCache: true,
-      sync : {
-      },
-    });
+    let Url = '';
+    let idCheck = false;
+    let check = false;
     const resetAction = NavigationActions.reset({
       index: 0,
       actions: [
         NavigationActions.navigate({ routeName: 'ChatRoom' }),
       ],
     });
-    storage.getAllDataForKey(this.state.name)
-      .then((users) => {
-        if (this.state.name !== '' && users[0].password === this.state.password) {
-          const userInfomation = {
-            name: this.state.name,
-            password: this.state.password,
-            url: users[0].url,
-          };
-          storage.save({
-            key: 'CurrentUser',
-            id: '',
-            data: userInfomation,
-          });
-          this.props.navigation.dispatch(resetAction);
-        } else {
-          this.setState({
-            idError: 'ユーザーIDが違います。',
-            passwordError: 'パスワードが違います。',
-          });
-          this.setState({
-            name: '',
-            password: '',
-          });
+    this.state.users.forEach((user) => {
+      console.log(user);
+      if (this.state.name === user.data.name) {
+        idCheck = true;
+        if (this.state.password === user.data.password) {
+          Url = user.data.url;
+          check = true;
         }
+      }
+    });
+    if (check) {
+      const userInfomation = {
+        name: this.state.name,
+        password: this.state.password,
+        url: Url,
+      };
+      storage.save({
+        key: 'CurrentUser',
+        id: '',
+        data: userInfomation,
       });
+      this.props.navigation.dispatch(resetAction);
+    } else if (idCheck) {
+      this.setState({
+        passwordError: 'パスワードが違います。',
+      });
+    } else {
+      this.setState({
+        idError: 'ユーザーIDが違います。',
+      });
+    }
   }
 
   render() {

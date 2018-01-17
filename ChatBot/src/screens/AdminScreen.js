@@ -14,13 +14,12 @@ const storage = new Storage({
   sync : {
   },
 });
-const url = 'https://facebook.github.io/react-native/docs/assets/favicon.png';
+// const url = 'https://facebook.github.io/react-native/docs/assets/favicon.png';
 class AdminScreen extends React.Component {
   state = {
     name: '',
     password: '',
     url: '',
-    CurrentUser: '',
     nameError:'',
     passwordError:'',
     urlError:'',
@@ -30,30 +29,37 @@ class AdminScreen extends React.Component {
       { key:2, data:'' },
       { key:3, data:'' },
     ],
+    date() {
+      const nowDate = new Date().toLocaleString().split(' ');
+      return (nowDate[0]);
+    },
   }
 
   componentWillMount() {
-    storage.getAllDataForKey('CurrentUser')
-      .then((user) => {
-        this.setState({ CurrentUser: user });
-        console.log(this.state.CurrentUser);
-      });
     const initialUsers = [];
     for (let i = 0; i < 4; i += 1) {
-      storage.getAllDataForKey((i + 0).toString())
+      storage.getAllDataForKey((i + 10).toString())
         .then((thisData) => {
+          console.log(thisData);
           initialUsers.push({ key: i + 0, data: thisData[0] });
         });
     }
+    console.log(initialUsers);
     this.setState({ users: initialUsers });
   }
   Registar() {
+    this.setState({
+      nameError: '',
+      passwordError: '',
+      urlError: '',
+    });
     const userInformation = {
       name: this.state.name,
       password: this.state.password,
       url: this.state.url,
+      date: this.state.date(),
     };
-    console.log(userInformation.name.length);
+
     let check = true;
     if (userInformation.name.length < 2 || userInformation.name.length > 20) {
       this.setState({
@@ -76,16 +82,17 @@ class AdminScreen extends React.Component {
     if (check) {
       const users = [];
       users.push({
-        key: 0,
+        key: 10,
         data: userInformation,
       });
       for (let i = 0; i < 3; i += 1) {
         users.push({
-          key: i + 1,
+          key: i + 11,
           data:{
             name: this.state.users[i].data.name,
             password: this.state.users[i].data.password,
-            url,
+            url: this.state.users[i].data.url,
+            date: this.state.users[i].data.date,
           },
         });
       }
@@ -97,12 +104,12 @@ class AdminScreen extends React.Component {
         });
       });
       this.setState({ users });
-      this.setState({
-        name: '',
-        password: '',
-        url: '',
-      });
     }
+    this.setState({
+      name: '',
+      password: '',
+      url: '',
+    });
   }
 
   render() {

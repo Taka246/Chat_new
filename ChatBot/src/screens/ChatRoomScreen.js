@@ -17,7 +17,7 @@ const url = 'https://facebook.github.io/react-native/docs/assets/favicon.png';
 class ChatRoomScreen extends React.Component {
   state = {
     date() {
-      const nowDate = new Date().toISOString().split(/T|\./);
+      const nowDate = new Date().toLocaleString().split(' ');
       return (
         `${nowDate[0]} ${nowDate[1]}`
       );

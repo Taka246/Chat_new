@@ -1,17 +1,34 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList, Image } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Image, TouchableHighlight } from 'react-native';
 
 class UserList extends React.Component {
+  Delete(thisUser) {
+    this.data = thisUser;
+    console.log(this.data);
+  }
+
   renderList({ item }) {
     this.url = item.data.url;
     this.name = item.data.name;
     this.date = item.data.date;
     return (
-      <View style={styles.list}>
-        <Image style={styles.picture} source={{ uri: this.url }} />
-        <View style={styles.listItem}>
-          <Text style={styles.memoName}>{this.name}</Text>
-          <Text style={styles.memoDate}>{this.date}</Text>
+      <View style={styles.User}>
+        <View style={styles.picture}>
+          <Image
+            source={{ uri: this.url }}
+            style={{ width: 50, height: 50, backgroundColor: 'aqua' }}
+          />
+        </View>
+        <View style={styles.name}>
+          <Text>{this.name}</Text>
+        </View>
+        <View style={styles.date}>
+          <Text>{this.date}</Text>
+        </View>
+        <View style={styles.delete}>
+          <TouchableHighlight style={styles.deleteButton} onPress={this.Delete.bind(this)} underlayColor="skyblue">
+            <Text style={styles.deleteButtonTitle}>削除</Text>
+          </TouchableHighlight>
         </View>
       </View>
     );
@@ -33,39 +50,46 @@ const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
   },
-  list: {
-    height: 150,
-    padding: 16,
-    backgroundColor: '#fff',
+  User: {
+    height: 72,
+    marginTop: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row',
-    borderWidth: 2,
-    borderTopWidth: 0,
-    borderColor: '#000',
+  },
+  picture: {
+    height: '80%',
+    width: '20%',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  picture: {
-    height: '74.375%',
-    width: '25%',
-    backgroundColor: 'skyblue',
-  },
-  listItem: {
+  name: {
     height: '100%',
-    width: '60%',
-    flexDirection: 'row',
-  },
-  memoName: {
     width: '25%',
-    fontSize: 14,
-    paddingLeft: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  memoDate: {
-    fontSize: 14,
+  date: {
+    height: '100%',
+    width: '30%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  memoTitle: {
-    height: '70%',
-    fontSize: 16,
-    paddingLeft: 16,
+  delete: {
+    height: '100%',
+    width: '25%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  deleteButton: {
+    height: '50%',
+    width: '80%',
+    backgroundColor: 'skyblue',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#000',
   },
 });
 
