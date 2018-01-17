@@ -7,7 +7,8 @@ class LoginScreen extends React.Component {
   state = {
     name: '',
     password: '',
-    error:'',
+    idError:'',
+    passwordError:'',
   }
 
   Submit() {
@@ -27,22 +28,26 @@ class LoginScreen extends React.Component {
     });
     storage.getAllDataForKey(this.state.name)
       .then((users) => {
-        console.log(users);
-        if (users[0].name !== '' && users[0].password === this.state.password) {
+        if (this.state.name !== '' && users[0].password === this.state.password) {
           const userInfomation = {
             name: this.state.name,
             password: this.state.password,
             url: users[0].url,
           };
           storage.save({
-            key: 'currentUser',
-            id: this.state.password,
+            key: 'CurrentUser',
+            id: '',
             data: userInfomation,
           });
           this.props.navigation.dispatch(resetAction);
         } else {
           this.setState({
-            error: 'ユーザーIDもしくはパスワードが違います。',
+            idError: 'ユーザーIDが違います。',
+            passwordError: 'パスワードが違います。',
+          });
+          this.setState({
+            name: '',
+            password: '',
           });
         }
       });
@@ -51,7 +56,10 @@ class LoginScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.error}>{this.state.error}</Text>
+        <View style={styles.validationErrors}>
+          <Text style={styles.error}>{this.state.idError}</Text>
+          <Text style={styles.error}>{this.state.passwordError}</Text>
+        </View>
         <TextInput
           style={styles.input}
           value={this.state.name}
@@ -84,12 +92,19 @@ const styles = StyleSheet.create({
     padding: 48,
     backgroundColor: '#fff',
   },
+  validationErrors: {
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   error: {
     color: 'red',
+    fontSize: 16,
+    paddingTop: 12,
   },
   input: {
     height: 48,
-    marginTop: 72,
+    marginTop: 42,
     borderBottomWidth: 3,
     borderColor: '#AAA',
     padding: 8,

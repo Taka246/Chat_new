@@ -1,8 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableHighlight, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Text, Image, TextInput, TouchableHighlight, AsyncStorage } from 'react-native';
 import Storage from 'react-native-storage';
-
-import UserList from '../components/UserList';
 import BottomBar from '../components/Interface';
 
 
@@ -104,6 +102,21 @@ class AdminScreen extends React.Component {
       });
     }
   }
+  Delete(thisUser) {
+    // for (let i = 0; i < 10; i += 1) {
+    // for (let name in users) {
+    //   get
+    //   if (thisUser !== this.state.CurrentUser.name) {
+    //     continue
+    //   }
+    // }
+    console.log(this.state.nameList);
+    console.log(thisUser);
+    storage.clearMapForKey(thisUser);
+    console.log(this.state.userData);
+    this.props.navigation.navigate('Admin');
+  }
+
 
   render() {
     return (
@@ -144,7 +157,28 @@ class AdminScreen extends React.Component {
           </TouchableHighlight>
           <View style={styles.users}>
             <Text style={styles.usersTitle}>ユーザ一覧</Text>
-            <UserList List={this.state.users} navigation={this.props.navigation} />
+
+            <View style={styles.User}>
+              <View style={styles.picture}>
+                <Image
+                  source={{ uri: this.state.urlList }}
+                  style={{ width: 50, height: 50, backgroundColor: 'aqua' }}
+                  // source={require('./water.png')}
+                />
+                <Text style={styles.pictureText}>pic</Text>
+              </View>
+              <View style={styles.name}>
+                <Text style={styles.nameText}>taro</Text>
+              </View>
+              <View style={styles.date}>
+                <Text style={styles.dateText}>2018/01/01</Text>
+              </View>
+              <View style={styles.delete}>
+                <TouchableHighlight style={styles.deleteButton} data={this.state.name} onPress={this.Delete.bind(this)} underlayColor="skyblue">
+                  <Text style={styles.deleteButtonTitle}>削除</Text>
+                </TouchableHighlight>
+              </View>
+            </View>
           </View>
         </View>
         <BottomBar navigation={this.props.navigation} />
@@ -204,6 +238,48 @@ const styles = StyleSheet.create({
   },
   usersTitle: {
     fontSize: 18,
+  },
+  User: {
+    height: 72,
+    marginTop: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  picture: {
+    height: '80%',
+    width: '20%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  name: {
+    height: '100%',
+    width: '25%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  date: {
+    height: '100%',
+    width: '35%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  delete: {
+    height: '100%',
+    width: '25%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  deleteButton: {
+    height: '50%',
+    width: '80%',
+    backgroundColor: 'skyblue',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#000',
+    marginLeft: 8,
   },
 });
 

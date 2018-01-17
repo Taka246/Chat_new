@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, AsyncStorage, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, TextInput, AsyncStorage, TouchableHighlight, Image } from 'react-native';
 import Storage from 'react-native-storage';
 
 import ChatList from '../components/ChatList';
@@ -29,14 +29,15 @@ class ChatRoomScreen extends React.Component {
       { key:2, data:'' },
       { key:3, data:'' },
     ],
-    currentUser: 'taro',
+    CurrentUser: '',
     Url: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
+    memoError: '',
   }
   componentWillMount() {
-    storage.getAllDataForKey('currentUser')
+    storage.getAllDataForKey('CurrentUser')
       .then((user) => {
         console.log(user);
-        this.setState({ currentUser: user[0].name, Url: user[0].url });
+        this.setState({ CurrentUser: user[0].name, Url: user[0].url });
       });
     const initialMemos = [];
     for (let i = 0; i < 4; i += 1) {
@@ -49,34 +50,40 @@ class ChatRoomScreen extends React.Component {
   }
   Submit() {
     const memos = [];
-    memos.push({
-      key: 0,
-      data:{
-        memo:this.state.memo,
-        name:this.state.currentUser,
-        date:this.state.date(),
-        url:this.state.Url,
-      },
-    });
-    for (let i = 0; i < 3; i += 1) {
+    if (this.state.memo.length < 1 || this.state.memo.length > 300) {
+      this.setState({
+        memoError: '文字数が指定範囲外です。',
+      });
+    } else {
       memos.push({
-        key: i + 1,
+        key: 0,
         data:{
-          memo:this.state.memos[i].data.memo,
-          name:this.state.currentUser,
-          date:this.state.memos[i].data.date,
-          url,
+          memo:this.state.memo,
+          name:this.state.CurrentUser,
+          date:this.state.date(),
+          url:this.state.Url,
         },
       });
-    }
-    this.setState({ memos });
-    memos.forEach((memo) => {
-      storage.save({
-        key: (memo.key + 5).toString(),
-        id: '',
-        data: memo.data,
+      for (let i = 0; i < 3; i += 1) {
+        memos.push({
+          key: i + 1,
+          data:{
+            memo:this.state.memos[i].data.memo,
+            name:this.state.CurrentUser,
+            date:this.state.memos[i].data.date,
+            url,
+          },
+        });
+      }
+      this.setState({ memos });
+      memos.forEach((memo) => {
+        storage.save({
+          key: (memo.key + 5).toString(),
+          id: '',
+          data: memo.data,
+        });
       });
-    });
+    }
   }
 
   render() {
@@ -84,25 +91,30 @@ class ChatRoomScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.edit}>
           <View style={styles.editUser}>
-            <Text style={styles.editPicture}>pic</Text>
-            <Text style={styles.editName}>{this.state.currentUser}</Text>
+            <Image style={styles.editPicture} source={{ uri: this.state.Url }} />
+            <Text style={styles.editName}>{this.state.CurrentUser}</Text>
           </View>
           <View style={styles.editItem}>
             <TextInput
               style={styles.input}
               value={this.state.memo}
               onChangeText={(text) => { this.setState({ memo: text }); }}
-              placeholder="メッセージ"
+              placeholder="メッセージ ( 1 ~ 300文字 )"
               multiline
               blurOnSubmit={false}
             />
-            <TouchableHighlight
-              style={styles.editBotton}
-              onPress={this.Submit.bind(this)}
-              underlayColor="skyblue"
-            >
-              <Text style={styles.editBottonText}>投稿</Text>
-            </TouchableHighlight>
+            <View style={styles.editBottom}>
+              <View style={styles.validationError}>
+                <Text style={styles.error}>{this.state.memoError}</Text>
+              </View>
+              <TouchableHighlight
+                style={styles.editButton}
+                onPress={this.Submit.bind(this)}
+                underlayColor="skyblue"
+              >
+                <Text style={styles.editButtonText}>投稿</Text>
+              </TouchableHighlight>
+            </View>
           </View>
         </View>
         <View style={styles.lists}>
@@ -157,13 +169,29 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 18,
   },
-  editBotton: {
-    width: '30%',
+  editBottom: {
     height: '20%',
+    alignItems: 'center',
+    marginTop: 10,
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  validationError: {
+    width: '70%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  error: {
+    color: 'red',
+    fontSize: 14,
+  },
+  editButton: {
+    width: '30%',
+    height: '100%',
     alignItems: 'center',
     borderWidth: 2,
     borderColor: '#000',
-    marginTop: 10,
     justifyContent: 'center',
   },
   lists: {
