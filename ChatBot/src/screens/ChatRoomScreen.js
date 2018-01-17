@@ -1,14 +1,82 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import { StyleSheet, View, Text, TextInput, AsyncStorage, TouchableHighlight } from 'react-native';
+import Storage from 'react-native-storage';
 
+import ChatList from '../components/ChatList';
 import BottomBar from '../components/Interface';
 
+const storage = new Storage({
+  size: 1000,
+  storageBackend: AsyncStorage,
+  defaultExpires: null,
+  enableCache: true,
+  sync : {
+  },
+});
+const url = 'https://facebook.github.io/react-native/docs/assets/favicon.png';
 class ChatRoomScreen extends React.Component {
   state = {
-    userName: ['Taro'],
-    userNames: ['Name'],
-    memoList: ['メモ内容'],
-    date: Date().split('G')[0],
+    date() {
+      const nowDate = new Date().toISOString().split(/T|\./);
+      return (
+        `${nowDate[0]} ${nowDate[1]}`
+      );
+    },
+    memo: '',
+    memos: [
+      { key:0, data:'' },
+      { key:1, data:'' },
+      { key:2, data:'' },
+      { key:3, data:'' },
+    ],
+    currentUser: 'taro',
+    Url: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
+  }
+  componentWillMount() {
+    storage.getAllDataForKey('currentUser')
+      .then((user) => {
+        console.log(user);
+        this.setState({ currentUser: user[0].name, Url: user[0].url });
+      });
+    const initialMemos = [];
+    for (let i = 0; i < 4; i += 1) {
+      storage.getAllDataForKey((i + 5).toString())
+        .then((thisData) => {
+          initialMemos.push({ key: i + 0, data: thisData[0] });
+        });
+    }
+    this.setState({ memos: initialMemos });
+  }
+  Submit() {
+    const memos = [];
+    memos.push({
+      key: 0,
+      data:{
+        memo:this.state.memo,
+        name:this.state.currentUser,
+        date:this.state.date(),
+        url:this.state.Url,
+      },
+    });
+    for (let i = 0; i < 3; i += 1) {
+      memos.push({
+        key: i + 1,
+        data:{
+          memo:this.state.memos[i].data.memo,
+          name:this.state.currentUser,
+          date:this.state.memos[i].data.date,
+          url,
+        },
+      });
+    }
+    this.setState({ memos });
+    memos.forEach((memo) => {
+      storage.save({
+        key: (memo.key + 5).toString(),
+        id: '',
+        data: memo.data,
+      });
+    });
   }
 
   render() {
@@ -17,31 +85,28 @@ class ChatRoomScreen extends React.Component {
         <View style={styles.edit}>
           <View style={styles.editUser}>
             <Text style={styles.editPicture}>pic</Text>
-            <Text style={styles.editName}>{this.state.userName}</Text>
+            <Text style={styles.editName}>{this.state.currentUser}</Text>
           </View>
           <View style={styles.editItem}>
             <TextInput
               style={styles.input}
-              value={this.state.email}
-              onChangeText={(text) => { this.setState({ email: text }); }}
+              value={this.state.memo}
+              onChangeText={(text) => { this.setState({ memo: text }); }}
               placeholder="メッセージ"
+              multiline
+              blurOnSubmit={false}
             />
-            <View style={styles.editBotton}>
+            <TouchableHighlight
+              style={styles.editBotton}
+              onPress={this.Submit.bind(this)}
+              underlayColor="skyblue"
+            >
               <Text style={styles.editBottonText}>投稿</Text>
-            </View>
+            </TouchableHighlight>
           </View>
         </View>
-        <View style={styles.list}>
-          <Text style={styles.picture}>pic</Text>
-          <View style={styles.listItem}>
-            <View style={styles.listTheme}>
-              <Text style={styles.memoName}>{this.state.userNames}</Text>
-              <Text style={styles.memoDate}>{this.state.date}</Text>
-            </View>
-            <View>
-              <Text style={styles.memoTitle}>{this.state.memoList}</Text>
-            </View>
-          </View>
+        <View style={styles.lists}>
+          <ChatList List={this.state.memos} navigation={this.props.navigation} />
         </View>
         <BottomBar navigation={this.props.navigation} />
       </View>
@@ -101,42 +166,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     justifyContent: 'center',
   },
-  list: {
-    height: '20%',
-    padding: 16,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    borderWidth: 2,
-    borderTopWidth: 0,
-    borderColor: '#000',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  picture: {
-    height: '74.375%',
-    width: '25%',
-    backgroundColor: 'skyblue',
-  },
-  listItem: {
-    height: '100%',
-    width: '75%',
-  },
-  listTheme: {
-    height: '30%',
-    flexDirection: 'row',
-  },
-  memoName: {
-    width: '25%',
-    fontSize: 14,
-    paddingLeft: 12,
-  },
-  memoDate: {
-    fontSize: 14,
-  },
-  memoTitle: {
-    height: '70%',
-    fontSize: 18,
-    paddingLeft: 12,
+  lists: {
+    height: '65%',
   },
 });
 

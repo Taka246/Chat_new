@@ -1,25 +1,90 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableHighlight, AsyncStorage } from 'react-native';
-
+import { StyleSheet, View, Text, Image, TextInput, TouchableHighlight, AsyncStorage } from 'react-native';
+import Storage from 'react-native-storage';
 import BottomBar from '../components/Interface';
 
 
+const storage = new Storage({
+  size: 1000,
+  storageBackend: AsyncStorage,
+  defaultExpires: null,
+  enableCache: true,
+  sync : {
+  },
+});
+
 class AdminScreen extends React.Component {
   state = {
-    email: '',
+    name: '',
     password: '',
-    url: '',
+    url: 'https://facebook.github.io/react-native/img/header_logo.png',
+    nameList: [('taro', 'taku')],
+    urlList: '',
+    userData: '',
+    currentUser: '',
   }
 
-
-  Registar() {
-    const userInfomation = [this.state.email, this.state.password, this.state.url];
-    AsyncStorage.setItem('userInfomation', JSON.stringify(userInfomation))
-      .then(() => {
-        console.log(userInfomation);
-        this.props.navigation.navigate('Admin');
+  componentWillMount() {
+    storage.getAllDataForKey('currentUser')
+      .then((user) => {
+        this.setState({ currentUser: user });
+        console.log(this.state.currentUser);
       });
   }
+  Registar() {
+    const userInfomation = {
+      name: this.state.name,
+      password: this.state.password,
+      url: this.state.url,
+    };
+    storage.save({
+      key: this.state.name,
+      id: this.state.password,
+      data: userInfomation,
+    })
+      .then(() => {
+        // const data = this.state.userData;
+        // data.push({ nameList:this.state.name, urlList: this.state.url });
+        // this.setState({ userData: data });
+        // const nameList = [];
+        // const urlList = [];
+        this.setState({
+          nameList: this.state.name,
+          urlList: this.state.url,
+        });
+        console.log(this.state.nameList[0]);
+        // const names = this.state.nameList;
+        // names.push({ name: this.state.name });
+        // this.setState({ nameList: names });
+        this.setState({
+          name: '',
+          password: '',
+          url: '',
+        });
+      });
+    // storage.load({
+    //   key: 'user',
+    //   id: '1001',
+    // })
+    //   .then((ret) => {
+    //     console.log(ret);
+    //   });
+  }
+  Delete(thisUser) {
+    // for (let i = 0; i < 10; i += 1) {
+    // for (let name in users) {
+    //   get
+    //   if (thisUser !== this.state.currentUser.name) {
+    //     continue
+    //   }
+    // }
+    console.log(this.state.nameList);
+    console.log(thisUser);
+    storage.clearMapForKey(thisUser);
+    console.log(this.state.userData);
+    this.props.navigation.navigate('Admin');
+  }
+
 
   render() {
     return (
@@ -27,8 +92,8 @@ class AdminScreen extends React.Component {
         <View style={styles.contents}>
           <TextInput
             style={styles.input}
-            value={this.state.email}
-            onChangeText={(text) => { this.setState({ email: text }); }}
+            value={this.state.name}
+            onChangeText={(text) => { this.setState({ name: text }); }}
             autoCapitalize="none"
             autoCorrect={false}
             placeholder="ユーザ名 ( 2 ~ 20文字 )"
@@ -58,16 +123,21 @@ class AdminScreen extends React.Component {
 
             <View style={styles.User}>
               <View style={styles.picture}>
+                <Image
+                  source={{ uri: this.state.urlList }}
+                  style={{ width: 50, height: 50, backgroundColor: 'aqua' }}
+                  // source={require('./water.png')}
+                />
                 <Text style={styles.pictureText}>pic</Text>
               </View>
               <View style={styles.name}>
-                <Text style={styles.nameText}>Taro</Text>
+                <Text style={styles.nameText}>{this.state.nameList}</Text>
               </View>
               <View style={styles.date}>
                 <Text style={styles.dateText}>2018/01/01</Text>
               </View>
               <View style={styles.delete}>
-                <TouchableHighlight style={styles.deleteButton} underlayColor="skyblue">
+                <TouchableHighlight style={styles.deleteButton} data={this.state.name} onPress={this.Delete.bind(this)} underlayColor="skyblue">
                   <Text style={styles.deleteButtonTitle}>削除</Text>
                 </TouchableHighlight>
               </View>
@@ -131,7 +201,6 @@ const styles = StyleSheet.create({
   picture: {
     height: '80%',
     width: '20%',
-    backgroundColor: 'skyblue',
     alignItems: 'center',
     justifyContent: 'center',
   },
