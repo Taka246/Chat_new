@@ -36,7 +36,6 @@ class ChatRoomScreen extends React.Component {
   componentWillMount() {
     storage.getAllDataForKey('CurrentUser')
       .then((user) => {
-        console.log(user);
         this.setState({ CurrentUser: user[0].name, Url: user[0].url });
       });
     const initialMemos = [];

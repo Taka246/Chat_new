@@ -4,7 +4,6 @@ import { StyleSheet, View, Text, FlatList, Image, TouchableHighlight } from 'rea
 class UserList extends React.Component {
   Delete(thisUser) {
     this.data = thisUser;
-    console.log(this.data);
   }
 
   renderList({ item }) {

@@ -42,7 +42,6 @@ class LoginScreen extends React.Component {
       ],
     });
     this.state.users.forEach((user) => {
-      console.log(user);
       if (this.state.name === user.data.name) {
         idCheck = true;
         if (this.state.password === user.data.password) {

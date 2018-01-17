@@ -14,7 +14,6 @@ const storage = new Storage({
   sync : {
   },
 });
-// const url = 'https://facebook.github.io/react-native/docs/assets/favicon.png';
 class AdminScreen extends React.Component {
   state = {
     name: '',
@@ -40,11 +39,9 @@ class AdminScreen extends React.Component {
     for (let i = 0; i < 4; i += 1) {
       storage.getAllDataForKey((i + 10).toString())
         .then((thisData) => {
-          console.log(thisData);
           initialUsers.push({ key: i + 0, data: thisData[0] });
         });
     }
-    console.log(initialUsers);
     this.setState({ users: initialUsers });
   }
   Registar() {
