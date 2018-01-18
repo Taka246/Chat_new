@@ -2,19 +2,19 @@ import React from 'react';
 import { StyleSheet, View, Text, FlatList, Image, AsyncStorage, TouchableHighlight } from 'react-native';
 import Storage from 'react-native-storage';
 
-const storage = new Storage({
-  size: 1000,
-  storageBackend: AsyncStorage,
-  defaultExpires: null,
-  enableCache: true,
-  sync : {
-  },
-});
 class ChatList extends React.Component {
   state = {
     user: '',
   }
   componentWillMount() {
+    const storage = new Storage({
+      size: 1000,
+      storageBackend: AsyncStorage,
+      defaultExpires: null,
+      enableCache: true,
+      sync : {
+      },
+    });
     storage.getAllDataForKey('LoginUser')
       .then((userData) => {
         this.setState({ user: userData[0].name });
@@ -38,7 +38,6 @@ class ChatList extends React.Component {
     this.name = item.data.name;
     this.date = item.data.date;
     this.memo = item.data.memo;
-    console.log(this.state.user);
     return (
       <View style={styles.list}>
         <Image style={styles.picture} source={{ uri: this.url }} />

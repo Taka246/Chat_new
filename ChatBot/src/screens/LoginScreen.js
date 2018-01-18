@@ -56,7 +56,6 @@ class LoginScreen extends React.Component {
         password: this.state.password,
         url: Url,
       };
-      console.log(userInformation);
       storage.save({
         key: 'LoginUser',
         id: '',

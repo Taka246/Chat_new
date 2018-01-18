@@ -5,14 +5,6 @@ import Storage from 'react-native-storage';
 import ChatList from '../components/ChatList';
 import BottomBar from '../components/Interface';
 
-const storage = new Storage({
-  size: 1000,
-  storageBackend: AsyncStorage,
-  defaultExpires: null,
-  enableCache: true,
-  sync : {
-  },
-});
 class ChatRoomScreen extends React.Component {
   state = {
     date() {
@@ -32,10 +24,18 @@ class ChatRoomScreen extends React.Component {
     Url: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
     memoError: '',
   }
+
   componentWillMount() {
+    const storage = new Storage({
+      size: 1000,
+      storageBackend: AsyncStorage,
+      defaultExpires: null,
+      enableCache: true,
+      sync : {
+      },
+    });
     storage.getAllDataForKey('LoginUser')
       .then((user) => {
-        console.log(user);
         this.setState({ LoginUser: user[0].name, Url: user[0].url });
       });
     const initialMemos = [];
@@ -47,7 +47,16 @@ class ChatRoomScreen extends React.Component {
     }
     this.setState({ memos: initialMemos });
   }
+
   Submit() {
+    const storage = new Storage({
+      size: 1000,
+      storageBackend: AsyncStorage,
+      defaultExpires: null,
+      enableCache: true,
+      sync : {
+      },
+    });
     const memos = [];
     if (this.state.memo.length < 1 || this.state.memo.length > 300) {
       this.setState({
@@ -154,7 +163,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'skyblue',
   },
   editName: {
-    fontSize: 14,
+    fontSize: 16,
   },
   editItem: {
     height: '100%',

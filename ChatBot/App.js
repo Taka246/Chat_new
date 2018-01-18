@@ -5,7 +5,7 @@ import ChatRoomScreen from './src/screens/ChatRoomScreen';
 
 const App = StackNavigator({
   Login:      { screen: LoginScreen },
-  ChatRoom:      { screen: ChatRoomScreen },
+  ChatRoom:   { screen: ChatRoomScreen },
   Admin:      { screen: AdminScreen },
 }, {
   navigationOptions: {
