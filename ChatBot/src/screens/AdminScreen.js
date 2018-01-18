@@ -5,7 +5,6 @@ import Storage from 'react-native-storage';
 import UserList from '../components/UserList';
 import BottomBar from '../components/Interface';
 
-
 const storage = new Storage({
   size: 1000,
   storageBackend: AsyncStorage,

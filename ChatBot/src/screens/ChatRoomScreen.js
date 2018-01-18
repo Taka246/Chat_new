@@ -13,13 +13,12 @@ const storage = new Storage({
   sync : {
   },
 });
-const url = 'https://facebook.github.io/react-native/docs/assets/favicon.png';
 class ChatRoomScreen extends React.Component {
   state = {
     date() {
       const nowDate = new Date().toLocaleString().split(' ');
       return (
-        `${nowDate[0]} ${nowDate[1]}`
+        `${nowDate[0]}    ${nowDate[1]}`
       );
     },
     memo: '',
@@ -29,14 +28,15 @@ class ChatRoomScreen extends React.Component {
       { key:2, data:'' },
       { key:3, data:'' },
     ],
-    CurrentUser: '',
+    LoginUser: '',
     Url: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
     memoError: '',
   }
   componentWillMount() {
-    storage.getAllDataForKey('CurrentUser')
+    storage.getAllDataForKey('LoginUser')
       .then((user) => {
-        this.setState({ CurrentUser: user[0].name, Url: user[0].url });
+        console.log(user);
+        this.setState({ LoginUser: user[0].name, Url: user[0].url });
       });
     const initialMemos = [];
     for (let i = 0; i < 4; i += 1) {
@@ -58,7 +58,7 @@ class ChatRoomScreen extends React.Component {
         key: 0,
         data:{
           memo:this.state.memo,
-          name:this.state.CurrentUser,
+          name:this.state.LoginUser,
           date:this.state.date(),
           url:this.state.Url,
         },
@@ -68,9 +68,9 @@ class ChatRoomScreen extends React.Component {
           key: i + 1,
           data:{
             memo:this.state.memos[i].data.memo,
-            name:this.state.CurrentUser,
+            name:this.state.memos[i].data.name,
             date:this.state.memos[i].data.date,
-            url,
+            url:this.state.memos[i].data.url,
           },
         });
       }
@@ -83,6 +83,7 @@ class ChatRoomScreen extends React.Component {
         });
       });
     }
+    this.setState({ memo: '' });
   }
 
   render() {
@@ -91,7 +92,7 @@ class ChatRoomScreen extends React.Component {
         <View style={styles.edit}>
           <View style={styles.editUser}>
             <Image style={styles.editPicture} source={{ uri: this.state.Url }} />
-            <Text style={styles.editName}>{this.state.CurrentUser}</Text>
+            <Text style={styles.editName}>{this.state.LoginUser}</Text>
           </View>
           <View style={styles.editItem}>
             <TextInput

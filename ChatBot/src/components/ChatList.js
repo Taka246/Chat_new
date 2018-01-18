@@ -1,12 +1,44 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList, Image } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Image, AsyncStorage, TouchableHighlight } from 'react-native';
+import Storage from 'react-native-storage';
 
+const storage = new Storage({
+  size: 1000,
+  storageBackend: AsyncStorage,
+  defaultExpires: null,
+  enableCache: true,
+  sync : {
+  },
+});
 class ChatList extends React.Component {
+  state = {
+    user: '',
+  }
+  componentWillMount() {
+    storage.getAllDataForKey('LoginUser')
+      .then((userData) => {
+        this.setState({ user: userData[0].name });
+      });
+  }
+
+  Delete(thisUser) {
+    this.data = thisUser;
+  }
+
+  deleteButton() {
+    return (
+      <TouchableHighlight style={styles.deleteButton} onPress={this.Delete.bind(this)} underlayColor="skyblue">
+        <Text style={styles.deleteButtonTitle}>削除</Text>
+      </TouchableHighlight>
+    );
+  }
+
   renderList({ item }) {
     this.url = item.data.url;
     this.name = item.data.name;
     this.date = item.data.date;
     this.memo = item.data.memo;
+    console.log(this.state.user);
     return (
       <View style={styles.list}>
         <Image style={styles.picture} source={{ uri: this.url }} />
@@ -17,6 +49,9 @@ class ChatList extends React.Component {
           </View>
           <View>
             <Text style={styles.memoTitle}>{this.memo}</Text>
+            <View style={styles.delete}>
+              {this.state.user === this.name ? this.deleteButton() : null }
+            </View>
           </View>
         </View>
       </View>
@@ -64,17 +99,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   memoName: {
-    width: '25%',
-    fontSize: 14,
+    width: '35%',
+    fontSize: 16,
     paddingLeft: 16,
   },
   memoDate: {
-    fontSize: 14,
+    fontSize: 16,
   },
   memoTitle: {
-    height: '70%',
+    height: '60%',
     fontSize: 16,
     paddingLeft: 16,
+  },
+  delete: {
+    height: 30,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  deleteButton: {
+    height: '100%',
+    width: '30%',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#000',
+    justifyContent: 'center',
+  },
+  deleteButtonTitle: {
+    fontSize: 14,
   },
 });
 

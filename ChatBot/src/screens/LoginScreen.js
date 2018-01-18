@@ -51,15 +51,16 @@ class LoginScreen extends React.Component {
       }
     });
     if (check) {
-      const userInfomation = {
+      const userInformation = {
         name: this.state.name,
         password: this.state.password,
         url: Url,
       };
+      console.log(userInformation);
       storage.save({
-        key: 'CurrentUser',
+        key: 'LoginUser',
         id: '',
-        data: userInfomation,
+        data: userInformation,
       });
       this.props.navigation.dispatch(resetAction);
     } else if (idCheck) {
