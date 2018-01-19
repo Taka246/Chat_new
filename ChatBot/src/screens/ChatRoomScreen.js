@@ -42,7 +42,11 @@ class ChatRoomScreen extends React.Component {
     for (let i = 0; i < 4; i += 1) {
       storage.getAllDataForKey((i + 5).toString())
         .then((thisData) => {
-          initialMemos.push({ key: i + 0, data: thisData[0] });
+          if (typeof thisData[0] !== 'undefined') {
+            initialMemos.push({ key: i + 0, data: thisData[0] });
+          }
+        })
+        .catch(() => {
         });
     }
     this.setState({ memos: initialMemos });
@@ -63,6 +67,9 @@ class ChatRoomScreen extends React.Component {
         memoError: '文字数が指定範囲外です。',
       });
     } else {
+      this.setState({
+        memoError: '',
+      });
       memos.push({
         key: 0,
         data:{
@@ -72,7 +79,7 @@ class ChatRoomScreen extends React.Component {
           url:this.state.Url,
         },
       });
-      for (let i = 0; i < 3; i += 1) {
+      for (let i = 0; i < this.state.memos.length; i += 1) {
         memos.push({
           key: i + 1,
           data:{

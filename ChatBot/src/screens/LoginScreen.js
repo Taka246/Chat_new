@@ -3,15 +3,6 @@ import { StyleSheet, View, Text, TextInput, TouchableHighlight, AsyncStorage } f
 import { NavigationActions } from 'react-navigation';
 import Storage from 'react-native-storage';
 
-const storage = new Storage({
-  size: 1000,
-  storageBackend: AsyncStorage,
-  defaultExpires: null,
-  enableCache: true,
-  sync : {
-  },
-});
-
 class LoginScreen extends React.Component {
   state = {
     name: '',
@@ -21,17 +12,48 @@ class LoginScreen extends React.Component {
     users: [],
   }
   componentWillMount() {
+    const storage = new Storage({
+      size: 1000,
+      storageBackend: AsyncStorage,
+      defaultExpires: null,
+      enableCache: true,
+      sync : {
+      },
+    });
     const users = [];
+    const rootUserData = {
+      name:'taka',
+      password:'taka',
+      url:'http://www.fringe81.com/product/img/docomo-ad-network/logo_service_fringe81.png',
+      date:'2018/01/01',
+    };
+    users.push({ key: 0, data: rootUserData });
     for (let i = 0; i < 4; i += 1) {
       storage.getAllDataForKey((i + 10).toString())
         .then((user) => {
-          users.push({ key: i + 0, data: user[0] });
+          if (typeof user[0] !== 'undefined') {
+            users.push({ key: i + 1, data: user[0] });
+          }
+        })
+        .catch(() => {
         });
     }
     this.setState({ users });
   }
 
   Submit() {
+    const storage = new Storage({
+      size: 1000,
+      storageBackend: AsyncStorage,
+      defaultExpires: null,
+      enableCache: true,
+      sync : {
+      },
+    });
+    this.setState({
+      passwordError: '',
+      idError: '',
+    });
     let Url = '';
     let idCheck = false;
     let check = false;

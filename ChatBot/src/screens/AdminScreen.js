@@ -38,7 +38,9 @@ class AdminScreen extends React.Component {
     for (let i = 0; i < 4; i += 1) {
       storage.getAllDataForKey((i + 10).toString())
         .then((thisData) => {
-          initialUsers.push({ key: i + 0, data: thisData[0] });
+          if (typeof thisData[0] !== 'undefined') {
+            initialUsers.push({ key: i + 0, data: thisData[0] });
+          }
         });
     }
     this.setState({ users: initialUsers });
@@ -81,7 +83,7 @@ class AdminScreen extends React.Component {
         key: 10,
         data: userInformation,
       });
-      for (let i = 0; i < 3; i += 1) {
+      for (let i = 0; i < this.state.users.length; i += 1) {
         users.push({
           key: i + 11,
           data:{
